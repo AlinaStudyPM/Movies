@@ -33,11 +33,6 @@ namespace AK_Project_41_Рефакторинг_фильмов
 
             MovieByCode = new Dictionary<string, Movie>();
             MovieCodeByTitle = new Dictionary<string, string>();
-            ReadOnlySpan<char> regionRU = "RU".AsSpan();
-            ReadOnlySpan<char> regionGB = "GB".AsSpan();
-            ReadOnlySpan<char> regionUS = "US".AsSpan();
-            ReadOnlySpan<char> langRu = "ru".AsSpan();
-            ReadOnlySpan<char> langEn = "en".AsSpan();
             int[] index = new int[5];
             foreach (string s in File.ReadLines("MovieCodes_IMDB.tsv"))
             {
@@ -46,18 +41,12 @@ namespace AK_Project_41_Рефакторинг_фильмов
                 {
                     index[i] = s.IndexOf('\t', index[i - 1] + 1);
                 }
-
-                ReadOnlySpan<char> line = s.AsSpan();
-                ReadOnlySpan<char> region = line.Slice(index[2] + 1, index[3] - index[2] - 1);
-                ReadOnlySpan<char> lang = line.Slice(index[3] + 1, index[4] - index[3] - 1);
-                if (region.Equals(regionGB, StringComparison.Ordinal) 
-                    || region.Equals(regionRU, StringComparison.Ordinal)
-                    || region.Equals(regionUS, StringComparison.Ordinal)
-                    || lang.Equals(langRu, StringComparison.Ordinal)
-                    || lang.Equals(langEn, StringComparison.Ordinal))
+                string region = s.Substring(index[2] + 1, index[3] - index[2] - 1);
+                string lang = s.Substring(index[3] + 1, index[4] - index[3] - 1);
+                if (region == "RU" || region == "GB" || region == "US" || lang == "ru" || lang == "en")
                 {
-                    string code = line.Slice(0, index[0]).ToString();
-                    string title = line.Slice(index[1] + 1, index[2] - index[1] - 1).ToString();
+                    string code = s.Substring(0, index[0]);
+                    string title = s.Substring(index[1] + 1, index[2] - index[1] - 1);
                     if (MovieByCode.TryGetValue(code, out Movie movie))
                     {
                         movie.AddTitle(title);
@@ -73,11 +62,8 @@ namespace AK_Project_41_Рефакторинг_фильмов
                 }
             }
             Console.WriteLine("Создание словарей MovieByCode и MovieCodeByTitle завершено " + StopWatch.Elapsed);
-            //string region = s.Substring(index[2] + 1, index[3] - index[2] - 1);
-            //string lang = s.Substring(index[3] + 1, index[4] - index[3] - 1);
-            //if (region == "RU" || region == "GB" || region == "US" || lang == "en" || lang == "ru")
-            //string code = s.Substring(0, index[0]);
-            //string title = s.Substring(index[1] + 1, index[2] - index[1] - 1);
+            
+            
 
             ActorByCode = new Dictionary<string, Actor>();
             ActorCodesByName = new Dictionary<string, HashSet<string>>();
