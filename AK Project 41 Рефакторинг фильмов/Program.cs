@@ -104,6 +104,8 @@ namespace AK_Project_41_Рефакторинг_фильмов
             Console.WriteLine("Создание словаря ActorByCode завершено " + StopWatch.Elapsed);  //Многовато
 
             index = new int[4];
+            ReadOnlySpan<char> actorCat = "actor".AsSpan();
+            ReadOnlySpan<char> directorCat = "director".AsSpan();
             foreach (string s in File.ReadLines("ActorsDirectorsCodes_IMDB.tsv"))
             {
                 index[0] = s.IndexOf('\t');
@@ -111,9 +113,10 @@ namespace AK_Project_41_Рефакторинг_фильмов
                 {
                     index[i] = s.IndexOf('\t', index[i - 1] + 1);
                 }
-                
-                string category = s.Substring(index[2] + 1, index[3] - index[2] - 1);
-                if (category == "actor")
+                ReadOnlySpan<char> line = s.AsSpan();
+                ReadOnlySpan<char> category = line.Slice(index[2] + 1, index[3] - index[2] - 1);
+                //string category = s.Substring(index[2] + 1, index[3] - index[2] - 1);
+                if (category.Equals(actorCat, StringComparison.Ordinal))
                 {
                     string movieCode = s.Substring(0, index[0]);
                     string actorCode = s.Substring(index[1] + 1, index[2] - index[1] - 1);
@@ -123,7 +126,7 @@ namespace AK_Project_41_Рефакторинг_фильмов
                         actor.AddMovie(movieCode);
                     }
                 }
-                if (category == "director")
+                if (category.Equals(directorCat, StringComparison.Ordinal))
                 {
                     string movieCode = s.Substring(0, index[0]);
                     string actorCode = s.Substring(index[1] + 1, index[2] - index[1] - 1);
