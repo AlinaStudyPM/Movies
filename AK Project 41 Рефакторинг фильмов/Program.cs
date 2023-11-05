@@ -206,12 +206,13 @@ namespace AK_Project_41_Рефакторинг_фильмов
                 {
                     index[i] = s.IndexOf(',', index[i - 1] + 1);
                 }
-                index[2] = s.Length;
-                string code2Movie = s.Substring(0, index[0]);
-                string codeTag = s.Substring(index[0] + 1, index[1] - index[0] - 1);
-                string relevance = s.Substring(index[1] + 1, index[2] - index[1] - 1);
+
+                ReadOnlySpan<char> line = s.AsSpan();
+                ReadOnlySpan<char> relevance = line.Slice(index[1] + 1, 3);
                 if (Convert.ToInt32(relevance[2]) >= Convert.ToInt32('5'))
                 {
+                    string code2Movie = s.Substring(0, index[0]);
+                    string codeTag = s.Substring(index[0] + 1, index[1] - index[0] - 1);
                     if (CodesByCode2.TryGetValue(code2Movie, out HashSet<string> codesMovies) && TagByCode.TryGetValue(codeTag, out string tag))
                     {
                         foreach (string code in codesMovies)
@@ -234,6 +235,7 @@ namespace AK_Project_41_Рефакторинг_фильмов
             }
             Console.WriteLine("Добавление тэгов к фильмам завершено " + StopWatch.Elapsed);
             Console.WriteLine();
+            //string relevance = s.Substring(index[1] + 1, index[2] - index[1] - 1);
 
 
             Console.WriteLine("movie: title  -  найти фильм по названию");
