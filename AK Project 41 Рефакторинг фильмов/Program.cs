@@ -190,12 +190,12 @@ namespace AK_Project_41_Рефакторинг_фильмов
                 {
                     index[i] = s.IndexOf(',', index[i - 1] + 1);
                 }
-                index[2] = s.Length;
-                string code2Movie = s.Substring(0, index[0]);
-                string codeTag = s.Substring(index[0] + 1, index[1] - index[0] - 1);
+                index[2] = s.Length; 
                 string relevance = s.Substring(index[1] + 1, index[2] - index[1] - 1);
                 if (Convert.ToInt32(relevance[2]) >= Convert.ToInt32('5'))
                 {
+                    string code2Movie = s.Substring(0, index[0]);
+                    string codeTag = s.Substring(index[0] + 1, index[1] - index[0] - 1);
                     if (CodesByCode2.TryGetValue(code2Movie, out HashSet<string> codesMovies) && TagByCode.TryGetValue(codeTag, out string tag))
                     {
                         foreach (string code in codesMovies)
