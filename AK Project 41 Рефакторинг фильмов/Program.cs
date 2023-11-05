@@ -216,17 +216,19 @@ namespace AK_Project_41_Рефакторинг_фильмов
                     {
                         foreach (string code in codesMovies)
                         {
-                            if (MovieCodesByTag.TryGetValue(tag, out HashSet<string> codesMovie))
+                            if (MovieByCode.TryGetValue(code, out Movie movie))
                             {
-                                MovieCodesByTag[tag].Add(code);
-                                //codesMovies.Add(movie.Code);
+                                movie.AddTag(tag);
+                            }
+                            if (MovieCodesByTag.TryGetValue(tag, out HashSet<string> codesForTag))
+                            {
+                                codesForTag.Add(code);
                             }
                             else
                             {
-                                MovieCodesByTag.Add(tag, new HashSet<string>() { code }); //new string[] { code }
+                                MovieCodesByTag.Add(tag, new HashSet<string>() { code });
                             }
                         }
-
                     }
                 }
             }
